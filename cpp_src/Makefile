@@ -27,7 +27,7 @@ CXXFLAGS = -O3 -std=c++11 $(INC)
 all: mkl_fft mkl_linalg extrapolation_cpu extrapolation_gpu
 
 mkl_fft:
-	$(CXX) -shared -fPIC $(CXXFLAGS) -o mkl_fft.so mkl_fft.c
+	$(CXX) -shared -fPIC $(CXXFLAGS) -o mkl_fft.so mkl_fft.cpp
 
 mkl_linalg: mkl_linalg.o
 	$(CXX) -shared -fPIC -o mkl_linalg.so mkl_linalg.o $(LFLAGS)
@@ -39,7 +39,7 @@ extrapolation_cpu.o: mkl_linalg.o
 	$(CXX) -Wall $(CXXFLAGS) -shared -fPIC -c extrapolation_cpu.cpp
 
 mkl_linalg.o:
-	$(CXX) -Wall $(CXXFLAGS) -shared -fPIC -c mkl_linalg.c
+	$(CXX) -Wall $(CXXFLAGS) -shared -fPIC -c mkl_linalg.cpp
 
 extrapolation_gpu:
 	nvcc $(CXXFLAGS) -arch=sm_35 -Xcompiler -fPIC -shared -o extrapolation_gpu.so extrapolation_gpu.cu
