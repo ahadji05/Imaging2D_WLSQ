@@ -118,8 +118,6 @@ for s in range(ns):
     pulse_back_st[s,:,:] = np.genfromtxt(file_shot[s], delimiter=',', dtype=np.float32)
     pulse_back_fs[s,:,:] = spfft.fft(pulse_back_st[s,:,:], axis=0)
 
-print("shape:",pulse_forw_fs.shape,"dtype:",pulse_forw_fs.dtype,"strides:",pulse_forw_fs.strides)
-
 prep_shots_time_stop = time.time()
 prep_shots_time_total = round(prep_shots_time_stop-prep_shots_time_start,2)
 
