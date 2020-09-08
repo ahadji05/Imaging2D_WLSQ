@@ -28,6 +28,7 @@ file_vel = sys.argv[1] #filename of velocity model (csv)
 file_config = sys.argv[2] #filename of configuration
 shots_dir = sys.argv[3] #directory to shots
 path_to_output = sys.argv[4] #path to output directory
+option = sys.argv[5] #select either host or device
 
 #   ------------------------------------------
 #   READ VELOCITY MODEL
@@ -129,17 +130,20 @@ extrap_time_start = time.time()
 
 image = np.zeros((ns,config.nz,config.nx), dtype=np.float32)
 #---------------------------------------------------------------------
-#print("Extrapolation on device")
-#extrap_device(ns, config.nextrap, config.nz, config.nt, config.nw, \
-#    config.nx, config.M, w_op_fs_forw, pulse_forw_fs, w_op_fs_back, \
-#    pulse_back_fs, image)
-#---------------------------------------------------------------------
-print("Extrapolation on host")
-for s in range(ns):
-    extrap_host(config.nextrap, config.nz, config.nx, config.nw, config.nt, config.M, \
-    w_op_fs_forw, w_op_fs_back, \
-    pulse_forw_fs[s,:,:], pulse_back_fs[s,:,:], \
-    image[s,:,:])
+if option == "device":
+    print("Extrapolation on device")
+    extrap_device(ns, config.nextrap, config.nz, config.nt, config.nw, \
+        config.nx, config.M, w_op_fs_forw, pulse_forw_fs, w_op_fs_back, \
+        pulse_back_fs, image)
+elif option == "host":
+    print("Extrapolation on host")
+    for s in range(ns):
+        extrap_host(config.nextrap, config.nz, config.nx, config.nw, config.nt, config.M, \
+        w_op_fs_forw, w_op_fs_back, pulse_forw_fs[s,:,:], pulse_back_fs[s,:,:], \
+        image[s,:,:])
+else:
+    print("No extrapolation option selected!")
+    print("check command line parameter 5")
 #---------------------------------------------------------------------
 extrap_time_stop = time.time()
 extrap_time_total = round(extrap_time_stop-extrap_time_start,2)
