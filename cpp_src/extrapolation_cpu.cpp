@@ -24,6 +24,7 @@ void extrapolate(int nextrap, int nz, int nx, int nf, int nt, int M,\
     for (int l=0; l<nextrap; ++l){
         long int depthIdx = l*nf*nx*length_M;
 
+        #pragma omp parallel for
         for (int i=0; i<nx; ++i){
             long int locIdx = i*length_M;
          
@@ -37,11 +38,13 @@ void extrapolate(int nextrap, int nz, int nx, int nf, int nt, int M,\
             
         } //end loop over locations
 
-        for (int j=0; j<nf; ++j)
+        #pragma omp parallel for
+        for (int j=0; j<nf; ++j){
             for (int i=0; i<dim_x; ++i){
                 old_forw.wf[j*dim_x+i] = new_forw.wf[j*dim_x+i];
                 old_back.wf[j*dim_x+i] = new_back.wf[j*dim_x+i];
             }
+        }
 
         /*-------------IMAGING--------------*/
         for (int i=0; i<nx; i++)

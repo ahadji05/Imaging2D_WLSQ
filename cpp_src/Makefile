@@ -33,10 +33,10 @@ mkl_linalg: mkl_linalg.o
 	$(CXX) -shared -fPIC -o mkl_linalg.so mkl_linalg.o $(LFLAGS)
 
 extrapolation_cpu: extrapolation_cpu.o
-	$(CXX) -shared -fPIC -o extrapolation_cpu.so extrapolation_cpu.o mkl_linalg.o $(LFLAGS)
+	$(CXX) -shared -fPIC -o extrapolation_cpu.so extrapolation_cpu.o mkl_linalg.o $(LFLAGS) -fopenmp
 
 extrapolation_cpu.o: mkl_linalg.o
-	$(CXX) -Wall $(CXXFLAGS) -shared -fPIC -c extrapolation_cpu.cpp
+	$(CXX) -Wall $(CXXFLAGS) -shared -fPIC -c extrapolation_cpu.cpp -fopenmp
 
 mkl_linalg.o:
 	$(CXX) -Wall $(CXXFLAGS) -shared -fPIC -c mkl_linalg.cpp
