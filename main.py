@@ -1,25 +1,22 @@
 
 import sys
 
+import numpy as np
+import scipy.fftpack as spfft
+from scipy import ndimage
+
 import readShotFiles
 
 sys.path.append('py_src/operatorsPreparation/')
 import preparation as prep
 import problemConfig as pConfig
 import util
-import readInput
 
 sys.path.append('./cpp_src/')
 from interface_cuda import extrapolate as extrap_device
 from interface import extrapolate as extrap_host
 
-import numpy as np
-import scipy.fftpack as spfft
-from scipy import ndimage
-
 import time
-
-import matplotlib.pyplot as plt
 
 time_start = time.time()
 
