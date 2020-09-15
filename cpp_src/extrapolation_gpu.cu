@@ -111,7 +111,7 @@ void extrapolate(int ns, int nextrap, int nz, int nt, int nf, int nx, int M,\
     cudaMemcpy(d_w_op_back, w_op_back, sizeOp * sizeof(fcomp), cudaMemcpyHostToDevice);
 
     //define number of blocks and number of threads per block
-    dim3 nThreads(160, 6, 1);
+    dim3 nThreads(16, 1, 1);
 
     size_t nBlocks_x = nx % nThreads.x == 0 ? size_t(nx/nThreads.x) : size_t(1 + nx/nThreads.x);
     size_t nBlocks_y = nf % nThreads.y == 0 ? size_t(nf/nThreads.y) : size_t(1 + nf/nThreads.y);
