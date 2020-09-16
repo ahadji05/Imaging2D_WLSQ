@@ -11,7 +11,7 @@ servers.
 
 Python works as the glue code that utilizes useful libraries such as *numpy*, *scipy*, *skimage*, *unittest* etc.
 that favor developement productivity and at the same provide sufficient perfromance. For even higher performane we
-use the module *ctypes* to interface with C++ or C++-CUDA compiled code. We suggest to intall Python using the Anaconda
+use the module *ctypes* to interface with C++ or C++-CUDA compiled code. We suggest to install Python using the Anaconda
 framework.
 
 - Python : [Anaconda_for_linux] (https://docs.anaconda.com/anaconda/install/linux/)
@@ -52,7 +52,7 @@ In example, to utilize the first library (CPU) the command is:
 *note the last parameter "host"*
 
 to use the second library (naive GPU implementation) replace "host" with "device". 
-To use the third replace "host" with "device_revOp", like this.
+To use the third replace "host" with "device_revOp", like this:
 
--  python main.py demo-data/velmod.csv demo-data/problemSetup.txt demo-data/seismicShots/ demo-result device_revOp
+-  python main.py demo-data/velmod.csv demo-data/problemSetup.txt demo-data/seismicShots/ demo-result **device_revOp**
 
