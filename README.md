@@ -33,14 +33,14 @@ INTEL = /opt/intel
 
 MKLROOT = $(INTEL)/mkl
 
-When you manage to compile succesfully you should see the following dynamic shared libraries in the same directory:
+When you manage to compile succesfully you should see the following dynamic shared libraries in the same directory.
 
 - extrapolation_cpu.so
 - extrapolation_gpu.so
 - extrapolation_revOp_gpu.so
 
-The first libray provide implementation of extrapolation and imaging on CPU. The second and third do so for GPU.
-The third libray a newer version which generally performs faster. We suggest to use this!
+The first library provides implementation of extrapolation and imaging on CPU. The second and third do so for GPU.
+The third libray is the latest one and generally performs faster. We suggest to use this (in case you want to run on a GPU)!
 
 The selection is done at run-time in the python script ***main.py*** according to the user's choice given
 as command line parameter.
