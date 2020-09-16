@@ -11,8 +11,8 @@ servers.
 
 Python works as the glue code that utilizes useful libraries such as *numpy*, *scipy*, *skimage*, *unittest* etc.
 that favor developement productivity and at the same provide sufficient perfromance. For even higher performane we
-use the module *ctypes* to interface with C++ or C++-CUDA compiled code. We suggest to intall Python using anaconda
-framework (see provided link).
+use the module *ctypes* to interface with C++ or C++-CUDA compiled code. We suggest to intall Python using the Anaconda
+framework.
 
 - Python : [Anaconda_for_linux] (https://docs.anaconda.com/anaconda/install/linux/)
 
@@ -24,5 +24,15 @@ Intel's Math Kernel Library (MKL) and CUDA, both are available for free download
 
 ### How to run the code
 
-To run this code you need to compile the C++ source code which is present in the directory ***/cpp src/*** using 
-the Makefile in the same directory. 
+To run this code you need first to compile the C++ source code which is present in the directory ***/cpp src/*** using 
+the Makefile in the same directory. To do so open the Makefile and specify the location of intel mkl directory.
+
+For example could be like this:
+
+#path to intel directory
+INTEL = /opt/intel
+
+#path to directory mkl
+MKLROOT = $(INTEL)/mkl
+
+
