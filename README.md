@@ -45,14 +45,14 @@ The third libray is the latest one and generally performs faster. We suggest to 
 The selection is done at run-time in the python script ***main.py*** according to the user's choice given
 as command line parameter.
 
-In example, to utilize the first library (CPU) the command is like:
+In example, to utilize the first library (CPU) the command is:
 
 - python main.py demo-data/velmod.csv demo-data/problemSetup.txt demo-data/seismicShots/ demo-result host
 
-*note the last parameter "host"
+*note the last parameter "host"*
 
-to use the second library (naive GPU implementation) replace "host" with "device", and to use the third replece
-with "device_revOp":
+to use the second library (naive GPU implementation) replace "host" with "device". 
+To use the third replace "host" with "device_revOp", like this.
 
 -  python main.py demo-data/velmod.csv demo-data/problemSetup.txt demo-data/seismicShots/ demo-result device_revOp
 
