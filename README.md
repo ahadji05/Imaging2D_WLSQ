@@ -1,7 +1,7 @@
 # Imaging2D_WLSQ
 ## Imaging with 2D wavefields using Weighted Least SQuares (WLSQ) extrapolation.
 
-### Description of the code
+### Implementation Decisions
 
 The code was developed initially in Python programming language and all computationaly expensive parts are
 implemented in C++ and C++-CUDA to allow better optimizations. You can run this software both in a CPU or an
@@ -35,23 +35,23 @@ MKLROOT = $(INTEL)/mkl
 
 When you manage to compile succesfully you should see the following dynamic shared libraries in the same directory.
 
-- extrapolation_cpu.so
-- extrapolation_gpu.so
-- extrapolation_revOp_gpu.so
+- *extrapolation_cpu.so*
+- *extrapolation_gpu.so*
+- *extrapolation_revOp_gpu.so*
 
-The first library provides implementation of extrapolation and imaging on CPU. The second and third do so for GPU.
-The third libray is the latest one and generally performs faster. We suggest to use this (in case you want to run on a GPU)!
+The first library provides implementation of extrapolation and imaging on CPU, while the second and third do so for GPU.
+The third libray is the latest one and generally performs faster. We suggest to use this (*in case you want to run on a GPU*)!
 
-The selection is done at run-time in the python script ***main.py*** according to the user's choice given
+The selection is done at run-time in the python script ***main.py*** according to the user's choice, which is provided
 as command line parameter.
 
-In example, to utilize the first library (CPU) the command is:
+In example, in order to utilize the CPU implementation (*extrapolation_cpu.so*), the command is:
 
 - python main.py demo-data/velmod.csv demo-data/problemSetup.txt demo-data/seismicShots/ demo-result host
 
 *note the last parameter "host"*
 
-to use the second library (naive GPU implementation) replace "host" with "device". 
+In order to use the second library (naive GPU implementation), replace the 5th parameter "host" with "device". 
 To use the third replace "host" with "device_revOp", like this:
 
 -  python main.py demo-data/velmod.csv demo-data/problemSetup.txt demo-data/seismicShots/ demo-result **device_revOp**
