@@ -7,15 +7,16 @@ NVIDIA GPU. The code is still under development for optimization purpose however
 and tested to produce correct results. The code is oriented to run in Linux operating systems, locally or in remote
 servers.
 
-Currently, the minimum requirements need to fullfil to be able to use this code, is to have installed the Python
-programming language and Intel Math Kernel library (MKL).
+Python works as the glue code that utilizes useful libraries such as *numpy*, *scipy*, *skimage*, *unittest* etc.
+that favor developement productivity and at the same provide sufficient perfromance. For even higher performane we
+use the module *ctypes* to interface with C++ or C++-CUDA compiled code.
 
-To run this code you need to compile the source code present in directory cpp source using the Makefile
-in the same directory. To be able to compile the code you need to have installed Intel MKL and CUDA.
+- Python : [Anaconda_for_linux] (https://docs.anaconda.com/anaconda/install/linux/)
+
+To run this code you need to compile the cpp source code present in directory ***/cpp src/*** using the Makefile
+in the same directory. To be able to compile the code you need to have installed Intel Math Kernel Library (MKL) and CUDA.
 Both are available for free download.
 
 - MKL : [MKL](https://software.intel.com/en-us/mkl/choose-download)
 - CUDA : [CUDA](https://developer.nvidia.com/cuda-downloads)
-
-
 
