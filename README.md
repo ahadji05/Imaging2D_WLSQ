@@ -10,7 +10,7 @@ in the same directory. To be able to compile the code you need to have installed
 Both are available for free download.
 
 - MKL : [MKL](https://software.intel.com/en-us/mkl/choose-download)
+- CUDA : [CUDA](https://developer.nvidia.com/cuda-downloads)
 
--CUDA : [CUDA](https://developer.nvidia.com/cuda-downloads)
 
 
