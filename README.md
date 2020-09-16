@@ -33,4 +33,9 @@ INTEL = /opt/intel
 
 MKLROOT = $(INTEL)/mkl
 
+When you manage to compile succesfully you should see the following dynamic shared libraries in the same directory:
+
+- extrapolation_cpu.so
+- extrapolation_gpu.so
+- extrapolation_revOp_gpu.so
 
