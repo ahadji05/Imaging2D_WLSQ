@@ -27,7 +27,7 @@ Intel's Math Kernel Library (MKL) and CUDA, both are available for free download
 To run this code you need first to compile the C++ source code which is present in the directory ***/cpp src/*** using 
 the Makefile in the same directory. To do so open the Makefile and specify the location of intel mkl directory.
 
-For example could be like this:
+In example:
 
 INTEL = /opt/intel
 
