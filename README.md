@@ -17,6 +17,6 @@ To run this code you need to compile the cpp source code present in directory **
 in the same directory. To be able to compile the code you need to have installed Intel Math Kernel Library (MKL) and CUDA.
 Both are available for free download.
 
-- MKL : [MKL](https://software.intel.com/en-us/mkl/choose-download)
-- CUDA : [CUDA](https://developer.nvidia.com/cuda-downloads)
+- MKL : [MKL] (https://software.intel.com/en-us/mkl/choose-download)
+- CUDA : [CUDA] (https://developer.nvidia.com/cuda-downloads)
 
