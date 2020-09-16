@@ -29,10 +29,8 @@ the Makefile in the same directory. To do so open the Makefile and specify the l
 
 For example could be like this:
 
-#path to intel directory
-INTEL = /opt/intel
+* INTEL = /opt/intel
 
-#path to directory mkl
-MKLROOT = $(INTEL)/mkl
+* MKLROOT = $(INTEL)/mkl
 
 
