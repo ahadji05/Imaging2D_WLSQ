@@ -14,13 +14,13 @@ that favor developement productivity and at the same provide sufficient perfroma
 use the module *ctypes* to interface with C++ or C++-CUDA compiled code. We suggest to install Python using the Anaconda
 framework.
 
-- Python : [Anaconda_for_linux] (https://docs.anaconda.com/anaconda/install/linux/)
+- Python : [https://docs.anaconda.com/anaconda/install/linux/](https://docs.anaconda.com/anaconda/install/linux/)
 
 To be able to compile the code you need to have installed 
 Intel's Math Kernel Library (MKL) and CUDA, both are available for free download.
 
-- MKL : [MKL] (https://software.intel.com/en-us/mkl/choose-download)
-- CUDA : [CUDA] (https://developer.nvidia.com/cuda-downloads)
+- MKL : [https://software.intel.com/en-us/mkl/choose-download](https://software.intel.com/en-us/mkl/choose-download)
+- CUDA : [https://developer.nvidia.com/cuda-downloads](https://developer.nvidia.com/cuda-downloads)
 
 ### How to run the code
 
