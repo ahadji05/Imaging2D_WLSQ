@@ -16,8 +16,7 @@ framework (see provided link).
 
 - Python : [Anaconda_for_linux] (https://docs.anaconda.com/anaconda/install/linux/)
 
-To run this code you need to compile the C++ source code which is present in the directory ***/cpp src/*** using 
-the Makefile in the same directory. To be able to compile the code you need to have installed 
+To be able to compile the code you need to have installed 
 Intel's Math Kernel Library (MKL) and CUDA, both are available for free download.
 
 - MKL : [MKL] (https://software.intel.com/en-us/mkl/choose-download)
@@ -25,3 +24,5 @@ Intel's Math Kernel Library (MKL) and CUDA, both are available for free download
 
 ### How to run the code
 
+To run this code you need to compile the C++ source code which is present in the directory ***/cpp src/*** using 
+the Makefile in the same directory. 
