@@ -39,3 +39,20 @@ When you manage to compile succesfully you should see the following dynamic shar
 - extrapolation_gpu.so
 - extrapolation_revOp_gpu.so
 
+The first libray provide implementation of extrapolation and imaging on CPU. The second and third do so for GPU.
+The third libray a newer version which generally performs faster. We suggest to use this!
+
+The selection is done at run-time in the python script ***main.py*** according to the user's choice given
+as command line parameter.
+
+In example, to utilize the first library (CPU) the command is like:
+
+- python main.py demo-data/velmod.csv demo-data/problemSetup.txt demo-data/seismicShots/ demo-result host
+
+*note the last parameter "host"
+
+to use the second library (naive GPU implementation) replace "host" with "device", and to use the third replece
+with "device_revOp":
+
+-  python main.py demo-data/velmod.csv demo-data/problemSetup.txt demo-data/seismicShots/ demo-result device_revOp
+
