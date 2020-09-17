@@ -74,8 +74,8 @@ final image as CSV files. You can visualize each with the provided script **vis.
 
 #### Some results
 
-![velocity_model_demo](smoothed_velmod.csv)
+![velocity_model_demo](smoothed_velmod.png)
 ![final_image_demo](final_image_demo.png)
 
-![velocity_model_dense_sampled](smoothed_velmod_dense_sampled.csv)
+![velocity_model_dense_sampled](smoothed_velmod_dense_sampled.png)
 ![final_image_dense_sampled](final_image_dense_sampled.png)
