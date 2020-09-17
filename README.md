@@ -78,6 +78,7 @@ final image as CSV files. You can visualize each with the provided script **vis.
 <img src="smoothed_velmod_demo.png" width=450 height=400>
 <img src="final_image_demo.png" width=450 height=400>
 </p>
+
 <p align="center">
 <src img="smoothed_velmod_dense_sampled.png" width=450 height=400>
 <src img="final_image_dense_sampled.png" width=450 height=400>
