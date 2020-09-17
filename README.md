@@ -80,7 +80,7 @@ final image as CSV files. You can visualize each with the provided script **vis.
 </p>
 
 <p align="center">
-<img src="smoothed_velmod_dense_sampled.png" width=450 height=400>
-<img src="final_image_dense_sampled.png" width=450 height=400>
+<img src="smoothed_velmod_dense_sampled.png" width=400 height=400>
+<img src="final_image_dense_sampled.png" width=400 height=400>
 </p>
 
