@@ -161,12 +161,13 @@ void extrapolate(int ns, int nextrap, int nz, int nt, int nf, int nx, int M,\
             
             imaging<<<1, nx>>>(&d_image[is*sizeImage + l*nx], &d_new_forw[is*sizePulse], \
                 &d_new_back[is*sizePulse], nf, nx, M);
-
+            
             copyPadded<<<nBlocks, nThreads>>>(&d_old_forw[is*sizePulse], &d_new_forw[is*sizePulse],\
                 nf, nx, M);
 
             copyPadded<<<nBlocks, nThreads>>>(&d_old_back[is*sizePulse], &d_new_back[is*sizePulse],\
                 nf, nx, M);
+            
         }
         cudaMemcpyAsync(h_forw_pulses[is].wf, &d_new_forw[is*sizePulse], \
             sizePulse*sizeof(fcomp), cudaMemcpyDeviceToHost, streams[is]);
