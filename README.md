@@ -56,7 +56,7 @@ To use the third replace "host" with "device_revOp", like this:
 
 -  python main.py demo-data/velmod.csv demo-data/problemSetup.txt demo-data/seismicShots/ demo-result **device_revOp**
 
-#### Input data
+#### Command line parameters
 
 The main python script (**main.py**) needs the following 5 command line parameters:
 
@@ -66,5 +66,9 @@ The main python script (**main.py**) needs the following 5 command line paramete
 you wish to image. Each file name **must** follow the syntax ***seisX_NX.csv***, where **X** is the position (in x-axis)
 of the source and **NX** the range. (*see the files in the directory demo-data/seismicShots*).
 - the output directory
-- one of the three options host, device or device_revOp that indicates where you want the extrapolation to be computed
+- one of the three options: host, device or device_revOp that indicates where you want the extrapolation and imaging to be computed
 (CPU, GPU version 1, GPU version 2).
+
+Upon completition the code saves in the specified output directory (parameter 4) the velocity model and accumulated (over all shots)
+final image. You can visualize each with the provided script **vis.py**.
+
