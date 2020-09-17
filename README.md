@@ -75,12 +75,14 @@ final image as CSV files. You can visualize each with the provided script **vis.
 #### Some results
 
 <p align="center">
-<img src="smoothed_velmod_demo.png" width=400 height=400>
-<img src="final_image_demo.png" width=400 height=400>
+    <title>A poor sampled experiment</title>
+    <img src="smoothed_velmod_demo.png" width=400 height=400>
+    <img src="final_image_demo.png" width=400 height=400>
 </p>
 
 <p align="center">
-<img src="smoothed_velmod_dense_sampled.png" width=400 height=400>
-<img src="final_image_dense_sampled.png" width=400 height=400>
+     <title>A dense sampled experiment</title>
+        <img src="smoothed_velmod_dense_sampled.png" width=400 height=400>
+        <img src="final_image_dense_sampled.png" width=400 height=400>
 </p>
 
