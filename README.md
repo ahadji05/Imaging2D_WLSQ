@@ -74,4 +74,4 @@ final image as CSV files. You can visualize each with the provided script **vis.
 
 #### Some results
 
-![](./final_image_demo.png)
+![final_image_demo](./final_image_demo.png)
