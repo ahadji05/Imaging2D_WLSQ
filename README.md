@@ -74,9 +74,10 @@ final image as CSV files. You can visualize each with the provided script **vis.
 
 #### Some results
 
-<img src="smoothed_velmod_demo.png" width=250 height=250>
-
-<img src="final_image_demo.png" width=250 height=250>
+<p align="center">
+<img src="smoothed_velmod_demo.png" width=350 height=350>
+<img src="final_image_demo.png" width=350 height=350>
+</p>
 
 ![velocity_model_dense_sampled](smoothed_velmod_dense_sampled.png "velocity model 2 (a dense sampled experiment)")
 ![final_image_dense_sampled](final_image_dense_sampled.png "final image 2 (a dense sampled experiment)")
