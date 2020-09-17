@@ -72,7 +72,7 @@ to be computed (CPU, GPU version 1, GPU version 2).
 Upon completition the code saves in the specified output directory (parameter 4) the velocity model and accumulated (over all shots)
 final image as CSV files. You can visualize each with the provided script **vis.py**.
 
-#### Some results
+#### Some outputs
 
 <p align="center">
     <img src="smoothed_velmod_demo.png" width=400 height=400>
