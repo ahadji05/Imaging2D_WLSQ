@@ -74,6 +74,4 @@ final image as CSV files. You can visualize each with the provided script **vis.
 
 #### Some results
 
-<img src="./final_image_demo.png"
-     alt="Demo final image"
-     style="float: left; margin-right: 10px;" />
+![](./final_image_demo.png)
