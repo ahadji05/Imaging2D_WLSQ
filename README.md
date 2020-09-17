@@ -60,15 +60,18 @@ To use the third replace "host" with "device_revOp", like this:
 
 The main python script (**main.py**) needs the following 5 command line parameters:
 
-- a comma separated values (CSV) file with the 2D velocity model (*see velmod.csv*)
-- a simple txt file with the problem configuration parameters, i.e nz, nx, nf etc. (*see problemSetup.txt*)
+- a comma separated values (CSV) file with the 2D velocity model (*see demo-data/velmod.csv*)
+- a simple txt file with the problem configuration parameters, i.e nz, nx, nf etc. (*see demo-data/problemSetup.txt*)
 - a directory containg (CSV) files where each file contains the signal recorded at the "surface" of the model
 you wish to image. Each file name **must** follow the syntax ***seisX_NX.csv***, where **X** is the position (in x-axis)
 of the source and **NX** the range. (*see the files in the directory demo-data/seismicShots*).
-- the output directory
-- one of the three options: host, device or device_revOp that indicates where you want the extrapolation and imaging to be computed
-(CPU, GPU version 1, GPU version 2).
+- the output directory (*i.e demo-results*)
+- one of the three options: *host*, *device* or *device_revOp* that indicates where you want the extrapolation and imaging
+to be computed (CPU, GPU version 1, GPU version 2).
 
 Upon completition the code saves in the specified output directory (parameter 4) the velocity model and accumulated (over all shots)
-final image. You can visualize each with the provided script **vis.py**.
+final image as CSV files. You can visualize each with the provided script **vis.py**.
 
+#### Some results
+
+![Drag Racing](markdownImages/final_image_demo.png)
