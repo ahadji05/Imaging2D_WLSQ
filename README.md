@@ -74,6 +74,10 @@ final image as CSV files. You can visualize each with the provided script **vis.
 
 #### Some outputs
 
+Here are two examples that demonstrate the output of this software. The first (*is the provided demo*) is a poorly sampled imaging
+and thus there significant amount of noise in the final image. On the other hand, the second is a denser and more carefully sampled 
+experiment which leads to better final image.
+
 <p align="center">
     <img src="smoothed_velmod_demo.png" width=400 height=400>
     <img src="final_image_demo.png" alt="A poor sampled experiment" width=400 height=400>
