@@ -25,11 +25,11 @@ void extrapolate(int nextrap, int nz, int nx, int nf, int nt, int M,\
         long int depthIdx = l*nf*nx*length_M;
 
         #pragma omp parallel for
-        for (int i=0; i<nx; ++i){
-            long int locIdx = i*length_M;
+        for (int j=0; j<nf; ++j){
+            long int freqIdx = j*nx*length_M;
          
-            for (int j=0; j<nf; ++j){
-                long int freqIdx = j*nx*length_M;
+            for (int i=0; i<nx; ++i){                
+                long int locIdx = i*length_M;
 
                 c64dot(&w_op_fs_forw[depthIdx+freqIdx+locIdx], &old_forw.wf[j*dim_x + i], length_M, &new_forw.wf[j*dim_x + i + M]);
                 c64dot(&w_op_fs_back[depthIdx+freqIdx+locIdx], &old_back.wf[j*dim_x + i], length_M, &new_back.wf[j*dim_x + i + M]);
