@@ -24,7 +24,7 @@ void extrapolate(int nextrap, int nz, int nx, int nf, int nt, int M,\
     for (int l=0; l<nextrap; ++l){
         long int depthIdx = l*nf*nx*length_M;
 
-        #pragma omp parallel for
+        #pragma omp parallel for schedule(dynamic,1)
         for (int j=0; j<nf; ++j){
             long int freqIdx = j*nx*length_M;
          
