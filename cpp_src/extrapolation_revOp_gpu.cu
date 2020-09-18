@@ -98,7 +98,7 @@ void extrapolate(int ns, int nextrap, int nz, int nt, int nf, int nx, int M,\
     fcomp * h_w_op_back = reverseOperator(w_op_back, nextrap, nf, nx, length_M); //reverse operator's last two indices on host
     auto stopTime = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> elapsedTime = stopTime - startTime;
-    std::cout << "Reverse operators time: " << elapsedTime.count() / 1000.0 << " seconds." << std::endl;
+    std::cout << "Reverse operators time(s): " << elapsedTime.count() / 1000.0 << " seconds." << std::endl;
     
     //allocate device memory
     fcomp * d_image;
@@ -118,6 +118,7 @@ void extrapolate(int ns, int nextrap, int nz, int nt, int nf, int nx, int M,\
     cudaMemcpy(d_w_op_forw, h_w_op_forw, sizeOp*sizeof(fcomp), cudaMemcpyHostToDevice);
     cudaMemcpy(d_w_op_back, h_w_op_back, sizeOp*sizeof(fcomp), cudaMemcpyHostToDevice);
 
+    startTime = std::chrono::high_resolution_clock::now();
     //allocate and read wavefields
     fcomp * h_image = new fcomp[sizeAllImages];
     std::vector<wfpad> h_forw_pulses(ns);
@@ -126,12 +127,15 @@ void extrapolate(int ns, int nextrap, int nz, int nt, int nf, int nx, int M,\
         h_forw_pulses[is] = wfpad(nf, nx, 1, M, 0, &forw_pulse[is*nt*nx]);
         h_back_pulses[is] = wfpad(nf, nx, 1, M, 0, &back_pulse[is*nt*nx]);
     }
+    stopTime = std::chrono::high_resolution_clock::now();
+    elapsedTime = stopTime - startTime;
+    std::cout << "Construct padded wavefields time(s): " << elapsedTime.count() / 1000.0 << " seconds." << std::endl;
 
     //define number of blocks and number of threads per block
     //define number of blocks and number of threads per block
-    dim3 nThreads(64, 1, 1);
+    dim3 nThreads(32, 1, 1);
     size_t nBlocks_x = nx % nThreads.x == 0 ? size_t(nx/nThreads.x) : size_t(1 + nx/nThreads.x);
-    size_t nBlocks_y = nf;
+    size_t nBlocks_y = nf % nThreads.y == 0 ? size_t(nf/nThreads.y) : size_t(1 + nf/nThreads.y);
     size_t nBlocks_z = 1;
     dim3 nBlocks(nBlocks_x, nBlocks_y, nBlocks_z);
     std::cout << "nThreads: (" << nThreads.x << ", " << nThreads.y << ", " << nThreads.z << ")" << std::endl;
@@ -179,6 +183,7 @@ void extrapolate(int ns, int nextrap, int nz, int nt, int nf, int nx, int M,\
         cudaStreamDestroy(streams[is]);
     }
 
+    startTime = std::chrono::high_resolution_clock::now();
     //copy to unpadded memory
     for(int is=0; is<ns; ++is)
         for (int j=0; j<nf; ++j)
@@ -186,18 +191,29 @@ void extrapolate(int ns, int nextrap, int nz, int nt, int nf, int nx, int M,\
                 forw_pulse[is*sizePulse + j*nx + i] = h_forw_pulses[is].wf[j*dim_x + i + M];
                 back_pulse[is*sizePulse + j*nx + i] = h_back_pulses[is].wf[j*dim_x + i + M];
             }
-    
+    stopTime = std::chrono::high_resolution_clock::now();
+    elapsedTime = stopTime - startTime;
+    std::cout << "Read wavefileds back time(s): " << elapsedTime.count() / 1000.0 << " seconds." << std::endl;
+        
+    startTime = std::chrono::high_resolution_clock::now();
     //take real part of images
     for(int is=0; is<ns; ++is)
         for(int l=0; l<nextrap; ++l)
             for(int i=0; i<nx; ++i){
                 image[is*sizeImage + l*nx + i] = reinterpret_cast<float*>(h_image)[2*(is*sizeImage + l*nx + i)];
             }
+    stopTime = std::chrono::high_resolution_clock::now();
+    elapsedTime = stopTime - startTime;
+    std::cout << "Read image real part time(s): " << elapsedTime.count() / 1000.0 << " seconds." << std::endl;
 
+    startTime = std::chrono::high_resolution_clock::now();
     //free host memory
     delete [] h_image;
     delete [] h_w_op_forw;
     delete [] h_w_op_back;
+    stopTime = std::chrono::high_resolution_clock::now();
+    elapsedTime = stopTime - startTime;
+    std::cout << "Free host memory time(s): " << elapsedTime.count() / 1000.0 << " seconds." << std::endl;
 
     //free device memory
     cudaFree(d_w_op_forw);
