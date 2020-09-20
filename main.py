@@ -143,10 +143,9 @@ elif option == "device_revOp":
         pulse_back_fs, image)
 elif option == "host":
     print("Extrapolation on host")
-    for s in range(ns):
-        extrap_host(config.nextrap, config.nz, config.nx, config.nw, config.nt, config.M, \
-        w_op_fs_forw, w_op_fs_back, pulse_forw_fs[s,:,:], pulse_back_fs[s,:,:], \
-        image[s,:,:])
+    extrap_host(ns, config.nextrap, config.nz, config.nx, config.nw, config.nt, config.M, \
+        w_op_fs_forw, w_op_fs_back, pulse_forw_fs, pulse_back_fs, \
+        image)
 else:
     print("No extrapolation option selected!")
     print("check command line parameter 5")
