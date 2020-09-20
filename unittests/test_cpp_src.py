@@ -114,6 +114,7 @@ class Test_extrapolation_cpu(unittest.TestCase):
 
     def test_cpp_src_extrapolate_1(self):
 
+        ns = 1
         nz = 1
         nextrap = 1
         nw = 2
@@ -136,7 +137,7 @@ class Test_extrapolation_cpu(unittest.TestCase):
         pulse_forw = np.array([[1+1j,2+2j,3+3j,4+4j],[5+5j,6+6j,7+7j,8+8j]], dtype=np.complex64)
         pulse_back = np.array([[1-1j,2-2j,3-3j,4-4j],[5+5j,6+6j,7+7j,8+8j]], dtype=np.complex64)
 
-        extrapolate(nextrap, nz, nx, nw, nt,\
+        extrapolate(ns, nextrap, nz, nx, nw, nt,\
             M, op_forw, op_back, pulse_forw, pulse_back, image)
 
         self.assertAlmostEqual(image[0,0], 968.0, delta=sdelta)
@@ -148,6 +149,7 @@ class Test_extrapolation_cpu(unittest.TestCase):
 
     def test_cpp_src_extrapolate_2(self):
 
+        ns = 1
         nz = 1
         nextrap = 1
         nw = 2
@@ -170,7 +172,7 @@ class Test_extrapolation_cpu(unittest.TestCase):
         pulse_forw = np.array([[1+1j,2+2j,3+3j,4+4j],[5+5j,6+6j,7+7j,8+8j]], dtype=np.complex64)
         pulse_back = np.array([[1+1j,2+2j,3+3j,4+4j],[5+5j,6+6j,7+7j,8+8j]], dtype=np.complex64)
 
-        extrapolate(nextrap, nz, nx, nw, nt,\
+        extrapolate(ns, nextrap, nz, nx, nw, nt,\
             M, op_forw, op_back, pulse_forw, pulse_back, image)
 
         self.assertAlmostEqual(image[0,2], -3690, delta=sdelta)
@@ -182,6 +184,7 @@ class Test_extrapolation_cpu(unittest.TestCase):
 
     def test_cpp_src_extrapolate_3(self):
     
+        ns = 1
         nz = 1
         nextrap = 1
         nw = 2
@@ -204,7 +207,7 @@ class Test_extrapolation_cpu(unittest.TestCase):
         pulse_forw = np.array([[1+1j,2+2j,3+3j,4+4j],[5+5j,6+6j,7+7j,8+8j]], dtype=np.complex64)
         pulse_back = np.array([[1+1j,2+2j,3+3j,4+4j],[5+5j,6+6j,7+7j,8+8j]], dtype=np.complex64)
 
-        extrapolate(nextrap, nz, nx, nw, nt,\
+        extrapolate(ns, nextrap, nz, nx, nw, nt,\
             M, op_forw, op_back, pulse_forw, pulse_back, image)
 
         self.assertAlmostEqual(image[0,3], -1898, delta=sdelta)
@@ -216,6 +219,7 @@ class Test_extrapolation_cpu(unittest.TestCase):
 
     def test_cpp_src_extrapolate_4(self):
         
+        ns = 1
         nz = 1
         nextrap = 1
         nw = 2
@@ -240,7 +244,7 @@ class Test_extrapolation_cpu(unittest.TestCase):
         pulse_forw = np.array([[1+1j,2+2j,3+3j,4+4j],[5+5j,6+6j,7+7j,8+8j]], dtype=np.complex64)
         pulse_back = np.array([[1+1j,2+2j,3+3j,4+4j],[5+5j,6+6j,7+7j,8+8j]], dtype=np.complex64)
 
-        extrapolate(nextrap, nz, nx, nw, nt,\
+        extrapolate(ns, nextrap, nz, nx, nw, nt,\
             M, op_forw, op_back, pulse_forw, pulse_back, image)
 
         self.assertAlmostEqual(image[0,2], -3690, delta=sdelta)
@@ -253,6 +257,7 @@ class Test_extrapolation_cpu(unittest.TestCase):
     
     def test_cpp_src_extrapolate_5(self):
         
+        ns = 1
         nz = 2
         nextrap = 2
         nw = 2
@@ -276,7 +281,7 @@ class Test_extrapolation_cpu(unittest.TestCase):
         pulse_forw = np.array([[1+1j,2+2j,3+3j,4+4j],[5+5j,6+6j,7+7j,8+8j]], dtype=np.complex64)
         pulse_back = np.array([[1+1j,2+2j,3+3j,4+4j],[5+5j,6+6j,7+7j,8+8j]], dtype=np.complex64)
 
-        extrapolate(nextrap, nz, nx, nw, nt,\
+        extrapolate(ns, nextrap, nz, nx, nw, nt,\
             M, op_forw, op_back, pulse_forw, pulse_back, image)
 
         self.assertAlmostEqual(image[0,3], -1898, delta=sdelta)
