@@ -48,7 +48,7 @@ c64fft1dback.argtypes = [ndpointer( dtype=np.complex64, flags=("C","A") ),
 #--------------------------
 extrapolate = extrapolation_cpu.extrapolate
 extrapolate.restype = c_void_p
-extrapolate.argtypes = [c_int, c_int, c_int,
+extrapolate.argtypes = [c_int, c_int, c_int, c_int,
                    c_int, c_int, c_int,
                    ndpointer( dtype=np.complex64, flags=("C","A") ),
                    ndpointer( dtype=np.complex64, flags=("C","A") ),
