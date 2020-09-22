@@ -49,6 +49,12 @@ This code is tested unit-by-unit using the Python module **unittest**, to ensure
 run these unit-tests. In the directory ***/unittests/*** you can find all test scripts (**test_*.py**), as well as three bash
 scripts to run them. There is one script for the Python codes, one for the C++ and one for the CUDA-C++ codes.
 
+Run as follows:
+
+- bash run-py_src-tests.sh
+- bash run-cpp_src-tests.sh
+- bash run-cpp_src_cuda-tests.sh
+
 #### Run main python script
 
 The main Python script (**main.py**) is found in the top directory. You may run the code using the provided bash script
