@@ -5,6 +5,7 @@
 #include <vector>
 #include <cmath>
 #include "wfPad.h"
+#include "timer.h"
 
 extern "C"
 {
@@ -83,8 +84,12 @@ void extrapolate(int ns, int nextrap, int nz, int nt, int nf, int nx, int M,\
     size_t sizeImage = nz * nx;
     size_t sizeAllImages = ns * sizeImage;
     size_t sizeOp = nextrap * nf * nx * length_M;
+    timer t0("EXTRAPOLATION");
+    timer t1("CONSTRUCT PADDED WAVEFIELDS");
+    timer t2("READ IMAGES");
 
     //allocate host memory
+    t1.start();
     fcomp * h_image = new fcomp[sizeAllImages];
     std::vector<wfpad> h_forw_pulses(ns);
     std::vector<wfpad> h_back_pulses(ns);
@@ -92,6 +97,7 @@ void extrapolate(int ns, int nextrap, int nz, int nt, int nf, int nx, int M,\
         h_forw_pulses[is] = wfpad(nf, nx, 1, M, 0, &forw_pulse[is*nt*nx]);
         h_back_pulses[is] = wfpad(nf, nx, 1, M, 0, &back_pulse[is*nt*nx]);
     }
+    t1.stop();
 
     //define device pointers and allocate memory
     fcomp * d_forw_pulse, * d_forw_pulse_new;
@@ -123,6 +129,7 @@ void extrapolate(int ns, int nextrap, int nz, int nt, int nf, int nx, int M,\
     std::cout << "nThreads: (" << nThreads.x << ", " << nThreads.y << ", " << nThreads.z << ")" << std::endl;
     std::cout << "nBlocks: (" << nBlocks.x << ", " << nBlocks.y << ", " << nBlocks.z << ")" << std::endl;
 
+    t0.start();
     for(int is=0; is<ns; ++is){
 
         cudaStreamCreate(&streams[is]);
@@ -156,7 +163,10 @@ void extrapolate(int ns, int nextrap, int nz, int nt, int nf, int nx, int M,\
 
         cudaStreamDestroy(streams[is]);
     }
+    cudaDeviceSynchronize();
+    t0.stop();
 
+    t2.start();
     //take real part of images
     for(int is=0; is<ns; ++is){
         for(int l=0; l<nextrap; ++l){
@@ -165,6 +175,7 @@ void extrapolate(int ns, int nextrap, int nz, int nt, int nf, int nx, int M,\
             }
         }
     }
+    t2.stop();
 
     //free device memory
     cudaFree(d_forw_pulse);
@@ -176,6 +187,10 @@ void extrapolate(int ns, int nextrap, int nz, int nt, int nf, int nx, int M,\
     cudaFree(d_image);
 
     delete [] h_image;
+
+    t0.dispInfo();
+    t1.dispInfo();
+    t2.dispInfo();
 
 } // end extrapPaddedZerosAndImaging
 
