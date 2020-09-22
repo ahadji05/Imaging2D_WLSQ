@@ -6,6 +6,7 @@
 #include <cmath>
 #include <vector>
 #include "revOp.h"
+#include "timer.h"
 
 extern "C"
 {
@@ -89,8 +90,10 @@ void extrapolate(int ns, int nextrap, int nz, int nt, int nf, int nx, int M,\
         h_pulses[is] = wfpad(nf, nx, 1, M, 0, &pulse[is*nt*nx]);
     
     //rearrange operators
-    fcomp * h_w_op = reverseOperator(w_op, nextrap, nf, nx, length_M); //reverse operator's last two indices on host
-
+    timer t0("REARRANGE OPERATORS");
+    fcomp * h_w_op = reverseOperator(w_op, nextrap, nf, nx, length_M, t0); //reverse operator's last two indices on host
+    t0.dispInfo();
+    
     //allocate device memory
     fcomp * d_w_op, * d_old, * d_new;
     cudaMalloc(&d_w_op, sizeOp * sizeof(fcomp));
