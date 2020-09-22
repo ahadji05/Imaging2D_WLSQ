@@ -1,8 +1,10 @@
 
 #include "revOp.h"
 
-fcomp * reverseOperator(fcomp * op, int nextrap, int nf, int nx, int length_M)
+fcomp * reverseOperator(fcomp * op, int nextrap, int nf, int nx, int length_M, timer & t)
 {
+    t.start();
+
     long int sizeOp = nextrap*nf*nx*length_M;
     fcomp * op_rev = new fcomp[sizeOp];
     
@@ -22,6 +24,8 @@ fcomp * reverseOperator(fcomp * op, int nextrap, int nf, int nx, int length_M)
             }
         }
     }
+
+    t.stop();
 
     return op_rev;
 }
