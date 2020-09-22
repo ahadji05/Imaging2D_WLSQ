@@ -13,7 +13,7 @@ extern "C"
 
 /*
 ------------------------------------------------------------------
-*/
+*/ 
 __global__ void copyPadded(fcomp * paste, fcomp * copyied, int nf, int nx, int M)
 {
     int dim_x = nx+2*M;
