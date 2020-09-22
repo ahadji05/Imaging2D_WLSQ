@@ -74,6 +74,14 @@ wfpad::wfpad(size_t nf, size_t nx, size_t ny, size_t Mx, size_t My)
     wfSize = nf*dim_x*dim_y;
 
     wf = new fcomp[wfSize];
+
+    //set zeros in halo regions
+    for(size_t j=0; j<nf; ++j)
+        for(size_t iy=0; iy<My; ++iy)
+            for(size_t ix=0; ix<Mx; ++ix){
+                wf[j*dim_y*dim_x + iy*dim_x + ix] = fcomp(0.0,0.0);
+                wf[j*dim_y*dim_x + iy*dim_x + nx + Mx + ix] = fcomp(0.0,0.0);
+    }
 }
 
 //----------------------------------------------------------------------------
