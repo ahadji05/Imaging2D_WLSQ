@@ -151,7 +151,7 @@ void extrapolate(int ns, int nextrap, int nz, int nt, int nf, int nx, int M,\
             sizePulse*sizeof(fcomp), cudaMemcpyHostToDevice, streams[is]);
         cudaMemcpyAsync(&d_old_back[is*sizePulse], h_back_pulses[is].wf, \
             sizePulse*sizeof(fcomp), cudaMemcpyHostToDevice, streams[is]);
-
+        
         for(int l=0; l<nextrap; ++l){
 
             int depthIdx = l*nf*nx*length_M;
@@ -222,8 +222,9 @@ void extrapolate(int ns, int nextrap, int nz, int nt, int nf, int nx, int M,\
     cudaFree(d_old_back);
     cudaFree(d_image);
 
-    std::cout << "---Timer info---" << std::endl;
-    std::cout << "----------------" << std::endl;
+    std::cout << std::endl;
+    std::cout << "------- Timer info -------" << std::endl;
+    std::cout << "--------------------------" << std::endl;
     t0.dispInfo();
     t1.dispInfo();
     t2.dispInfo();
