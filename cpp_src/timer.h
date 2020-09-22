@@ -18,9 +18,13 @@ class timer {
         std::chrono::duration<double, std::milli> elapsed;
         std::string name;
         int ncalls;
+        double t_sum_milli;
+        double t_sum_seconds;
 
         timer(const std::string & name) : name(name){
             ncalls = 0;
+            t_sum_milli = 0.0;
+            t_sum_seconds = 0.0;
         }
 
         ~timer(){};
@@ -32,13 +36,15 @@ class timer {
 
         void stop(){
             clickStop = std::chrono::high_resolution_clock::now();
-            elapsed += clickStop - clickStart;
+            elapsed = clickStop - clickStart;
+            t_sum_milli += (double)(elapsed.count());
+            t_sum_seconds = t_sum_milli / 1000.0;
         }
 
         void dispInfo(){
             std::cout << name << ": ";
             std::cout << "calls(" << ncalls << ") total ";
-            std::cout << elapsed.count() / 1000.0 << " seconds." << std::endl;
+            std::cout << t_sum_seconds << " seconds." << std::endl;
         }
 
 };
