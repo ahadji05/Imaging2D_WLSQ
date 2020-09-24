@@ -1,9 +1,8 @@
 
-#include "cuda_runtime.h"
-#include <thrust/complex.h>
 #include <iostream>
 #include <vector>
 #include <cmath>
+
 #include "wfPad.h"
 #include "timer.h"
 
