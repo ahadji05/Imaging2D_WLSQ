@@ -24,8 +24,8 @@ CXXFLAGS = -O3 -std=c++11 $(INC)
 #-----------------------------------
 #	no need to edit below this line
 
-all: mkl_fft mkl_linalg extrapolation_cpu extrapolation_gpu extrapolation_sh_gpu \
-	extrapolation_revOp_gpu extrapolation_sh_AoS_gpu
+all: mkl_fft mkl_linalg extrapolation_cpu extrapolation_gpu \
+	extrapolation_revOp_gpu extrapolation_sh_revOp_gpu
 
 mkl_fft:
 	$(CXX) -shared -fPIC $(CXXFLAGS) -o mkl_fft.so mkl_fft.cpp
@@ -45,14 +45,11 @@ mkl_linalg.o:
 extrapolation_gpu:
 	nvcc $(CXXFLAGS) -arch=sm_35 -Xcompiler -fPIC -shared -o extrapolation_gpu.so extrapolation_gpu.cu
 
-extrapolation_sh_gpu:
-	nvcc $(CXXFLAGS) -arch=sm_35 -Xcompiler -fPIC -shared -o extrapolation_sh_gpu.so extrapolation_sh_gpu.cu
-
 extrapolation_revOp_gpu: revOp.o
 	nvcc $(CXXFLAGS) -arch=sm_35 -Xcompiler -fPIC -shared -o extrapolation_revOp_gpu.so extrapolation_revOp_gpu.cu revOp.o
 
-extrapolation_sh_AoS_gpu: revOp.o
-	nvcc $(CXXFLAGS) -arch=sm_35 -Xcompiler -fPIC -shared -o extrapolation_sh_AoS_gpu.so extrapolation_sh_AoS_gpu.cu revOp.o
+extrapolation_sh_revOp_gpu: revOp.o
+	nvcc $(CXXFLAGS) -arch=sm_35 -Xcompiler -fPIC -shared -o extrapolation_sh_revOp_gpu.so extrapolation_sh_revOp_gpu.cu revOp.o
 
 revOp.o: revOp.c
 	$(CXX) -Wall $(CXXFLAGS) -fPIC -c revOp.c -fopenmp
