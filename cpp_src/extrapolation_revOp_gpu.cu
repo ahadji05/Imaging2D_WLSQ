@@ -1,15 +1,11 @@
 
-#include "cuda_runtime.h"
 #include <iostream>
-#include "stdio.h"
-#include "wfPad.h"
-#include <cmath>
 #include <vector>
-#include "revOp.h"
+#include <cmath>
 
+#include "wfPad.h"
+#include "revOp.h"
 #include "timer.h"
-#include <chrono>
-#include <ctime>
 
 extern "C"
 {
@@ -162,13 +158,13 @@ void extrapolate(int ns, int nextrap, int nz, int nt, int nf, int nx, int M,\
             extrapDepth<<<nBlocks, nThreads, 0, streams[is]>>>(&d_new_back[is*sizePulse], nf, nx, \
                 M, &d_w_op_back[depthIdx], &d_old_back[is*sizePulse]);
             
-            imaging<<<1, nx>>>(&d_image[is*sizeImage + l*nx], &d_new_forw[is*sizePulse], \
+            imaging<<<1, nx, 0, streams[is]>>>(&d_image[is*sizeImage + l*nx], &d_new_forw[is*sizePulse], \
                 &d_new_back[is*sizePulse], nf, nx, M);
             
-            copyPadded<<<nBlocks, nThreads>>>(&d_old_forw[is*sizePulse], &d_new_forw[is*sizePulse],\
+            copyPadded<<<nBlocks, nThreads, 0, streams[is]>>>(&d_old_forw[is*sizePulse], &d_new_forw[is*sizePulse],\
                 nf, nx, M);
 
-            copyPadded<<<nBlocks, nThreads>>>(&d_old_back[is*sizePulse], &d_new_back[is*sizePulse],\
+            copyPadded<<<nBlocks, nThreads, 0, streams[is]>>>(&d_old_back[is*sizePulse], &d_new_back[is*sizePulse],\
                 nf, nx, M);
             
         }
