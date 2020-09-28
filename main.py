@@ -15,6 +15,7 @@ import util
 sys.path.append('./cpp_src/')
 from interface_cuda import extrapolate as extrap_device
 from interface_cuda import extrapolate_revOp as extrap_device_revOp
+from interface_cuda import extrapolate_sh_revOp as extrap_device_sh_revOp
 from interface import extrapolate as extrap_host
 
 import time
@@ -139,6 +140,11 @@ if option == "device":
 elif option == "device_revOp":
     print("Extrapolation on device (rearranged operators)")
     extrap_device_revOp(ns, config.nextrap, config.nz, config.nt, config.nw, \
+        config.nx, config.M, w_op_fs_forw, pulse_forw_fs, w_op_fs_back, \
+        pulse_back_fs, image)
+elif option == "device_sh_revOp":
+    print("Extrapolation on device using shared-memory (rearranged operators)")
+    extrap_device_sh_revOp(ns, config.nextrap, config.nz, config.nt, config.nw, \
         config.nx, config.M, w_op_fs_forw, pulse_forw_fs, w_op_fs_back, \
         pulse_back_fs, image)
 elif option == "host":
