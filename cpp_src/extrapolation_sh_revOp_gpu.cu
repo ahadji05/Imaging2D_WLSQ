@@ -14,15 +14,20 @@ extern "C"
 -----------------------------------------------------------------
 */
 __global__ void copyPadded(fcomp * paste, fcomp * copyied, \
-    int nf, int nx, int M)
+    int fIdx, int nx, int M, int ns, int sizePulse)
 {
     int dim_x = nx+2*M;
-    int pixelIdx_x = blockIdx.x * blockDim.x + threadIdx.x;
-    int pixelIdx_y = blockIdx.y * blockDim.y + threadIdx.y;
+    int xIdx = blockIdx.x * blockDim.x + threadIdx.x;
 
-    if(pixelIdx_x < nx && pixelIdx_y < nf){
-        int pixelIdx = pixelIdx_y * dim_x + pixelIdx_x + M;
-        paste[pixelIdx] = copyied[pixelIdx];
+    if( xIdx < nx ){
+
+        for(int is=0; is<ns; ++is){
+
+            int srcIdx = is*sizePulse;
+            int pixelIdx = srcIdx + fIdx * dim_x + xIdx + M;
+        
+            paste[pixelIdx] = copyied[pixelIdx];
+        }
     }
 }
 
@@ -30,43 +35,47 @@ __global__ void copyPadded(fcomp * paste, fcomp * copyied, \
 ------------------------------------------------------------------
 */
 __global__ void imaging(fcomp * image, fcomp * forw_pulse, fcomp * back_pulse, \
-    int nf, int nx, int M)
+    int nf, int nx, int M, int depth_l, int sizePulse, int sizeImage)
 {
     int dim_x = nx+2*M;
-    int pixelIdx_x = blockIdx.x * blockDim.x + threadIdx.x;
+    int xIdx = threadIdx.x;
+    int sIdx = blockIdx.x;
 
-    fcomp conv;
+    fcomp conv = fcomp(0.0,0.0);
 
     for(int j=0; j<nf; j++){
-        int Idx = j * dim_x + pixelIdx_x + M;
+        int Idx = sIdx*sizePulse + j*dim_x + xIdx + M;
         conv += forw_pulse[Idx] * thrust::conj(back_pulse[Idx]);
     }
 
-    image[pixelIdx_x] = conv;
+    image[sIdx*sizeImage + depth_l*nx + xIdx] = conv;
 }
 
 /*
 ------------------------------------------------------------------
 */
 __global__ void extrapDepth(fcomp * new_wf, int nf, int nx, \
-    int M, fcomp * w_op, fcomp * old_wf)
+    int M, int fIdx, int ns, int sizePulse, fcomp * w_op, fcomp * old_wf)
 {
     int dim_x = nx+2*M;
     int length_M = 2*M+1;
-
     int xIdx = blockIdx.x * blockDim.x + threadIdx.x;
-    int fIdx = blockIdx.y * blockDim.y + threadIdx.y;
+    fcomp pixel;
 
-    fcomp pixel = fcomp(0.0,0.0);
+    if( xIdx < nx ){
 
-    if(xIdx < nx && fIdx < nf){
+        for(int is=0; is<ns; ++is){
 
-        for(int k=0; k<length_M; ++k){
-            pixel += w_op[fIdx*nx*length_M + k*nx + xIdx] * \
-                old_wf[fIdx*dim_x + xIdx + k];
+            int srcIdx = is*sizePulse;
+
+            pixel = fcomp(0.0,0.0);
+
+            for(int k=0; k<length_M; ++k){
+                pixel += w_op[k*nx + xIdx] * old_wf[srcIdx + fIdx*dim_x + xIdx + k];
+            }
+
+            new_wf[srcIdx + fIdx*dim_x + M + xIdx] = pixel;
         }
-
-        new_wf[fIdx*dim_x + M + xIdx] = pixel;
     }
 
 } // end extrapolation to next depth
@@ -85,7 +94,6 @@ void extrapolate(int ns, int nextrap, int nz, int nt, int nf, int nx, int M,\
 
     size_t sizePulse = nf * dim_x;
     size_t sizeAllSources = ns * sizePulse;
-    size_t sizeOp = nextrap * nf * nx * length_M;
     size_t sizeImage = nz * nx;
     size_t sizeAllImages = ns * sizeImage;
 
@@ -98,20 +106,12 @@ void extrapolate(int ns, int nextrap, int nz, int nt, int nf, int nx, int M,\
     fcomp * d_image;
     cudaMalloc(&d_image, sizeAllImages * sizeof(fcomp));
 
-    fcomp * d_w_op_forw, * d_old_forw, * d_new_forw;
-    cudaMalloc(&d_w_op_forw, sizeOp * sizeof(fcomp));
+    fcomp * d_old_forw, * d_new_forw, * d_old_back, * d_new_back;
     cudaMalloc(&d_old_forw, sizeAllSources * sizeof(fcomp));
     cudaMalloc(&d_new_forw, sizeAllSources * sizeof(fcomp));
-
-    fcomp * d_w_op_back, * d_old_back, * d_new_back;
-    cudaMalloc(&d_w_op_back, sizeOp * sizeof(fcomp));
     cudaMalloc(&d_old_back, sizeAllSources * sizeof(fcomp));
     cudaMalloc(&d_new_back, sizeAllSources * sizeof(fcomp));
     
-    //copy operators on device
-    cudaMemcpy(d_w_op_forw, h_w_op_forw, sizeOp*sizeof(fcomp), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_w_op_back, h_w_op_back, sizeOp*sizeof(fcomp), cudaMemcpyHostToDevice);
-
     timer t1("CONSTRUCT PADDED WAVEFIELDS");
     t1.start();
     //allocate and read wavefields
@@ -121,64 +121,80 @@ void extrapolate(int ns, int nextrap, int nz, int nt, int nf, int nx, int M,\
     for(int is=0; is<ns; ++is){
         h_forw_pulses[is] = wfpad(nf, nx, 1, M, 0, &forw_pulse[is*nt*nx]);
         h_back_pulses[is] = wfpad(nf, nx, 1, M, 0, &back_pulse[is*nt*nx]);
+        cudaMemcpy(&d_old_forw[is*sizePulse], h_forw_pulses[is].wf, sizePulse * sizeof(fcomp), cudaMemcpyHostToDevice);
+        cudaMemcpy(&d_old_back[is*sizePulse], h_back_pulses[is].wf, sizePulse * sizeof(fcomp), cudaMemcpyHostToDevice);
     }
     t1.stop();
 
+    size_t sizeOp = nf * nx * length_M; //note that we allocate memory for one depth only!!
+    fcomp * d_w_op_forw, * d_w_op_back;
+    cudaMalloc(&d_w_op_forw, sizeOp * sizeof(fcomp));
+    cudaMalloc(&d_w_op_back, sizeOp * sizeof(fcomp));
+
     //define number of blocks and number of threads per block
     //define number of blocks and number of threads per block
-    dim3 nThreads(32, 1, 1);
+    int x_stride = 32;
+    int sh_per_block = x_stride*length_M*sizeof(fcomp);
+    dim3 nThreads(x_stride, 1, 1);
     size_t nBlocks_x = nx % nThreads.x == 0 ? size_t(nx/nThreads.x) : size_t(1 + nx/nThreads.x);
-    size_t nBlocks_y = nf % nThreads.y == 0 ? size_t(nf/nThreads.y) : size_t(1 + nf/nThreads.y);
+    size_t nBlocks_y = 1;
     size_t nBlocks_z = 1;
     dim3 nBlocks(nBlocks_x, nBlocks_y, nBlocks_z);
     std::cout << "nThreads: (" << nThreads.x << ", " << nThreads.y << ", " << nThreads.z << ")" << std::endl;
     std::cout << "nBlocks: (" << nBlocks.x << ", " << nBlocks.y << ", " << nBlocks.z << ")" << std::endl;
 
     //create one stream per source
-    cudaStream_t streams[ns];
+    cudaStream_t streams[nf];
+    for(int j=0; j<nf; ++j)
+        cudaStreamCreate(&streams[j]);
 
     timer t5("EXTRAPOLATION AND IMAGING");
-    t5.start();
-    for(int is=0; is<ns; ++is){
+    t5.start();    
+    for(int l=0; l<nextrap; ++l){
 
-        cudaStreamCreate(&streams[is]);
+        int depthIdx = l*nf*nx*length_M;
 
-        cudaMemcpyAsync(&d_old_forw[is*sizePulse], h_forw_pulses[is].wf, \
-            sizePulse*sizeof(fcomp), cudaMemcpyHostToDevice, streams[is]);
-        cudaMemcpyAsync(&d_old_back[is*sizePulse], h_back_pulses[is].wf, \
-            sizePulse*sizeof(fcomp), cudaMemcpyHostToDevice, streams[is]);
-        
-        for(int l=0; l<nextrap; ++l){
+        for(int j=0; j<nf; ++j){
 
-            int depthIdx = l*nf*nx*length_M;
+            int freqIdx = j*nx*length_M;
 
-            extrapDepth<<<nBlocks, nThreads, 0, streams[is]>>>(&d_new_forw[is*sizePulse], nf, nx, \
-                M, &d_w_op_forw[depthIdx], &d_old_forw[is*sizePulse]);
+            cudaMemcpyAsync(&d_w_op_forw[freqIdx], &h_w_op_forw[depthIdx + freqIdx], \
+                nx*length_M*sizeof(fcomp), cudaMemcpyHostToDevice, streams[j]);
+
+            cudaMemcpyAsync(&d_w_op_back[freqIdx], &h_w_op_back[depthIdx + freqIdx], \
+                nx*length_M*sizeof(fcomp), cudaMemcpyHostToDevice, streams[j]);
+
+            extrapDepth<<<nBlocks, nThreads, 0, streams[j]>>>(d_new_forw, nf, nx, \
+                M, j, ns, sizePulse, &d_w_op_forw[freqIdx], d_old_forw);
             
-            extrapDepth<<<nBlocks, nThreads, 0, streams[is]>>>(&d_new_back[is*sizePulse], nf, nx, \
-                M, &d_w_op_back[depthIdx], &d_old_back[is*sizePulse]);
+            extrapDepth<<<nBlocks, nThreads, 0, streams[j]>>>(d_new_back, nf, nx, \
+                M, j, ns, sizePulse, &d_w_op_back[freqIdx], d_old_back);
             
-            imaging<<<1, nx, 0, streams[is]>>>(&d_image[is*sizeImage + l*nx], &d_new_forw[is*sizePulse], \
-                &d_new_back[is*sizePulse], nf, nx, M);
+            copyPadded<<<nBlocks, nThreads, 0, streams[j]>>>(d_old_forw, d_new_forw,\
+                j, nx, M, ns, sizePulse);
             
-            copyPadded<<<nBlocks, nThreads, 0, streams[is]>>>(&d_old_forw[is*sizePulse], &d_new_forw[is*sizePulse],\
-                nf, nx, M);
-
-            copyPadded<<<nBlocks, nThreads, 0, streams[is]>>>(&d_old_back[is*sizePulse], &d_new_back[is*sizePulse],\
-                nf, nx, M);
+            copyPadded<<<nBlocks, nThreads, 0, streams[j]>>>(d_old_back, d_new_back, \
+                j, nx, M, ns, sizePulse);
             
         }
-        cudaMemcpyAsync(h_forw_pulses[is].wf, &d_new_forw[is*sizePulse], \
-            sizePulse*sizeof(fcomp), cudaMemcpyDeviceToHost, streams[is]);
-        cudaMemcpyAsync(h_back_pulses[is].wf, &d_new_back[is*sizePulse], \
-            sizePulse*sizeof(fcomp), cudaMemcpyDeviceToHost, streams[is]);
-        cudaMemcpyAsync(&h_image[is*sizeImage], &d_image[is*sizeImage], \
-            sizeImage*sizeof(fcomp), cudaMemcpyDeviceToHost, streams[is]);
-
-        cudaStreamDestroy(streams[is]);
+        //implicit synchronization using NULL stream (the default stream)
+        imaging<<<ns, nx>>>(d_image, d_new_forw, d_new_back, \
+            nf, nx, M, l, sizePulse, sizeImage);
     }
-    cudaDeviceSynchronize();
+
+    for(int j=0; j<nf; ++j)
+        cudaStreamDestroy(streams[j]);
+
+    // copy data back to Host
+    cudaMemcpy(h_image, d_image, sizeAllImages * sizeof(fcomp), cudaMemcpyDeviceToHost);
+    for(int is=0; is<ns; ++is){
+        cudaMemcpy(h_forw_pulses[is].wf, &d_new_forw[is*sizePulse], \
+            sizePulse*sizeof(fcomp), cudaMemcpyDeviceToHost);
+        cudaMemcpy(h_back_pulses[is].wf, &d_new_back[is*sizePulse], \
+            sizePulse*sizeof(fcomp), cudaMemcpyDeviceToHost);
+    }
     t5.stop();
+
 
     timer t2("WRITE-BACK UNPADDED WAVEFIELDS");
     t2.start();
