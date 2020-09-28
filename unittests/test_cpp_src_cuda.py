@@ -14,8 +14,9 @@ import time
 sdelta = 1e-5
 
 #--------------------------
-from interface_cuda import extrapolate_revOp
 from interface_cuda import extrapolate
+from interface_cuda import extrapolate_revOp
+from interface_cuda import extrapolate_sh_revOp
 
 class TestDeviceExtrapolation(unittest.TestCase):
     
@@ -382,3 +383,40 @@ class TestDeviceExtrapolation(unittest.TestCase):
         self.assertAlmostEqual(image[0,2], 20.0 , delta=sdelta)
         self.assertAlmostEqual(image[1,2], -1040.0 , delta=sdelta)
 
+#-----------------------------------------------------------------
+
+    def test_cuda_extrapolation_sh_rearranged_1(self):
+
+        ns = 1
+        nz = 5
+        nextrap = 1
+        nf = 2
+        nt = nf
+        nx = 6
+        M = 2
+        length_M = 2*M+1
+
+        image = np.zeros((nz,nx), dtype=np.float32)
+
+        op = np.zeros((nextrap, nf, nx, length_M), dtype=np.complex64)
+        op2 = np.zeros_like(op)
+        for l in range(nextrap):
+            for i in range(nf):
+                for v in range(3+M):
+                    op2[l,i,1,v] = 1+1j
+                    op[l,i,1,v] = 1-1j
+        
+        pulse = np.zeros((nf, nx), dtype=np.complex64)
+        pulse[1,0:4] = np.array([1+0j,2+0j,3+0j,4+0j], dtype=np.complex64)
+        pulse2 = np.zeros_like(pulse)
+        pulse2[1,0:4] = np.array([5+1j,6-2j,7+0j,8+0j], dtype=np.complex64)
+
+        print('\n')
+        print(pulse)
+        print(pulse2)
+
+        extrapolate_sh_revOp(ns, nextrap, nz, nt, nf, nx, M, op, pulse, op2, pulse2, image)
+
+        print(pulse)
+        print(pulse2)
+        print(image)
