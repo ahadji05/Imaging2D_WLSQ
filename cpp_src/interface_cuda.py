@@ -41,9 +41,12 @@ extrapolate_revOp.argtypes = [c_int, c_int, c_int,
 
 #----------------------------------------------------------------------
 #
-extrapolation_sh_revOp = extrapolation_sh_revOp_gpu.extrapolate
-extrapolation_sh_revOp.restype = c_void_p
-extrapolation_sh_revOp.argtypes = [c_int, c_int, c_int,
+extrapolate_sh_revOp = extrapolation_sh_revOp_gpu.extrapolate
+extrapolate_sh_revOp.restype = c_void_p
+extrapolate_sh_revOp.argtypes = [c_int, c_int, c_int,
                    c_int, c_int, c_int, c_int,
                    ndpointer( dtype=np.complex64, flags=("C","A") ),
-                   ndpointer( dtype=np.complex64, flags=("C","A") )]
+                   ndpointer( dtype=np.complex64, flags=("C","A") ),
+                   ndpointer( dtype=np.complex64, flags=("C","A") ),
+                   ndpointer( dtype=np.complex64, flags=("C","A") ),
+                   ndpointer( dtype=np.float32, flags=("C","A") )]
