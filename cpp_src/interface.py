@@ -46,6 +46,7 @@ c64fft1dback.argtypes = [ndpointer( dtype=np.complex64, flags=("C","A") ),
 #--------------------------
 #   extrapolation
 #--------------------------
+# optimized version
 extrapolate = extrapolation_cpu.extrapolate
 extrapolate.restype = c_void_p
 extrapolate.argtypes = [c_int, c_int, c_int, c_int,
@@ -56,4 +57,15 @@ extrapolate.argtypes = [c_int, c_int, c_int, c_int,
                    ndpointer( dtype=np.complex64, flags=("C","A") ),
                    ndpointer( dtype=np.float32, flags=("C","A") )]
 
+
+# non-optimized version: it is only provided for demonstration of performance comparison!
+extrapolate_v0 = extrapolation_cpu.extrapolate_v0
+extrapolate_v0.restype = c_void_p
+extrapolate_v0.argtypes = [c_int, c_int, c_int, c_int,
+                   c_int, c_int, c_int,
+                   ndpointer( dtype=np.complex64, flags=("C","A") ),
+                   ndpointer( dtype=np.complex64, flags=("C","A") ),
+                   ndpointer( dtype=np.complex64, flags=("C","A") ),
+                   ndpointer( dtype=np.complex64, flags=("C","A") ),
+                   ndpointer( dtype=np.float32, flags=("C","A") )]
 
